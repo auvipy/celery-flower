@@ -1,0 +1,9 @@
+include AUTHORS
+include Changelog
+include README.rst
+include MANIFEST.in
+include LICENSE
+include TODO
+recursive-include celerymon *.py
+prune celerymon/*.pyc
+prune bin/*.pyc
