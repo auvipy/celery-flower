@@ -5,7 +5,7 @@ Start the celery clock service from the Django management command.
 """
 from django.core.management.base import BaseCommand
 
-from celerymon.bin.celerymon import run_monitor, OPTION_LIST
+from celerymonitor.bin.celerymond import run_monitor, OPTION_LIST
 
 
 class Command(BaseCommand):

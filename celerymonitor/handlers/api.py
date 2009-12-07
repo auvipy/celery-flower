@@ -4,7 +4,7 @@ import simplejson
 from tornado.web import RequestHandler, Application
 
 from celery.task import revoke
-from celerymon.state import monitor_state
+from celerymonitor.state import monitor_state
 
 
 def JSON(fun):

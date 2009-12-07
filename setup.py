@@ -12,7 +12,7 @@ except ImportError:
     use_setuptools()
     from setuptools import setup, find_packages, Command
 
-import celerymon as distmeta
+import celerymonitor as distmeta
 
 
 class RunTests(Command):

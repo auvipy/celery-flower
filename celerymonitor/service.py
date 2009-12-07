@@ -1,8 +1,8 @@
 from carrot.connection import DjangoBrokerConnection
 from celery.events import EventReceiver
 
-from celerymon.state import monitor_state
-from celerymon.web import WebServerThread
+from celerymonitor.state import monitor_state
+from celerymonitor.web import WebServerThread
 
 
 class MonitorListener(object):
