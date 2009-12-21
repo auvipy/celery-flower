@@ -3,7 +3,7 @@ from functools import wraps
 import simplejson
 from tornado.web import RequestHandler, Application
 
-from celery.task import revoke
+from celery.task.control import revoke
 from celerymonitor.state import monitor_state
 
 

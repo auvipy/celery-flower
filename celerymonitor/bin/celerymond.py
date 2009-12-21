@@ -55,15 +55,13 @@ from celery import platform
 from celery import __version__
 from celery.log import emergency_error
 from celery.loaders import settings
-from celery.messaging import get_connection_info
+from celery.utils import info
 
 from celerymonitor.service import MonitorService
 
 STARTUP_INFO_FMT = """
 Configuration ->
     . broker -> %(conninfo)s
-    . exchange -> %(exchange)s (%(exchange_type)s)
-    . consumer -> queue:%(consumer_queue)s binding:%(consumer_rkey)s
     . webserver -> http://localhost:%(http_port)s
 """.strip()
 
@@ -121,12 +119,7 @@ def run_monitor(detach=False, loglevel=conf.CELERYMON_LOG_LEVEL,
     # when users sends e-mails.
     print(STARTUP_INFO_FMT % {
             "http_port": http_port,
-            "conninfo": get_connection_info(),
-            "exchange": conf.AMQP_EXCHANGE,
-            "exchange_type": conf.AMQP_EXCHANGE_TYPE,
-            "consumer_queue": conf.AMQP_CONSUMER_QUEUE,
-            "consumer_rkey": conf.AMQP_CONSUMER_ROUTING_KEY,
-            "publisher_rkey": conf.AMQP_PUBLISHER_ROUTING_KEY,
+            "conninfo": info.format_broker_info(),
             "loglevel": loglevel,
             "pidfile": pidfile,
     })
