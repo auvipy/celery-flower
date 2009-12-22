@@ -87,5 +87,10 @@ setup(
         "Topic :: System :: Monitoring",
         "Topic :: System :: Distributed Computing",
     ],
+    entrypoints={
+        "console_scripts": [
+            "celerymon = celerymonitor.bin.celerymond:main",
+        ],
+    },
     long_description=long_description,
 )
