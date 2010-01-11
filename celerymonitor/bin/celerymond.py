@@ -138,7 +138,8 @@ def run_monitor(detach=False, loglevel=conf.CELERYMON_LOG_LEVEL,
                                         uid=uid,
                                         gid=gid)
         context.open()
-        logger = setup_logger(loglevel, logfile)
+        logger = setup_logger(loglevel, logfile,
+                              format=conf.CELERYMON_LOG_FORMAT)
         redirect_stdouts_to_logger(logger, loglevel)
 
     def _run_clock():
