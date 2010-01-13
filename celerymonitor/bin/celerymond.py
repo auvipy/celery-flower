@@ -16,34 +16,6 @@
     Logging level, choose between ``DEBUG``, ``INFO``, ``WARNING``,
     ``ERROR``, ``CRITICAL``, or ``FATAL``.
 
-.. cmdoption:: -p, --pidfile
-
-    Path to pidfile.
-
-.. cmdoption:: -d, --detach, --daemon
-
-    Run in the background as a daemon.
-
-.. cmdoption:: -u, --uid
-
-    User-id to run ``celerymon`` as when in daemon mode.
-
-.. cmdoption:: -g, --gid
-
-    Group-id to run ``celerymon`` as when in daemon mode.
-
-.. cmdoption:: --umask
-
-    umask of the process when in daemon mode.
-
-.. cmdoption:: --workdir
-
-    Directory to change to when in daemon mode.
-
-.. cmdoption:: --chroot
-
-    Change root directory to this path when in daemon mode.
-
 """
 import os
 import sys
@@ -76,35 +48,11 @@ OPTION_LIST = (
     optparse.make_option('-P', '--port',
             action="store", type="int", dest="http_port", default=8989,
             help="Port the webserver should listen to."),
-    optparse.make_option('-p', '--pidfile',
-            default=conf.CELERYMON_PID_FILE,
-            action="store", dest="pidfile",
-            help="Path to pidfile."),
-    optparse.make_option('-d', '--detach', '--daemon', default=False,
-            action="store_true", dest="detach",
-            help="Run in the background as a daemon."),
-    optparse.make_option('-u', '--uid', default=None,
-            action="store", dest="uid",
-            help="User-id to run celerymon as when in daemon mode."),
-    optparse.make_option('-g', '--gid', default=None,
-            action="store", dest="gid",
-            help="Group-id to run celerymon as when in daemon mode."),
-    optparse.make_option('--umask', default=0,
-            action="store", type="int", dest="umask",
-            help="umask of the process when in daemon mode."),
-    optparse.make_option('--workdir', default=None,
-            action="store", dest="working_directory",
-            help="Directory to change to when in daemon mode."),
-    optparse.make_option('--chroot', default=None,
-            action="store", dest="chroot",
-            help="Change root directory to this path when in daemon mode."),
-    )
+)
 
 
-def run_monitor(detach=False, loglevel=conf.CELERYMON_LOG_LEVEL,
-        logfile=conf.CELERYMON_LOG_FILE, pidfile=conf.CELERYMON_PID_FILE,
-        umask=0, uid=None, gid=None, working_directory=None, chroot=None,
-        http_port=8989, **kwargs):
+def run_monitor(loglevel=conf.CELERYMON_LOG_LEVEL,
+        logfile=conf.CELERYMON_LOG_FILE, http_port=8989, **kwargs):
     """Starts the celery monitor."""
 
     print("celerymon %s is starting." % __version__)
@@ -112,16 +60,12 @@ def run_monitor(detach=False, loglevel=conf.CELERYMON_LOG_LEVEL,
     # Setup logging
     if not isinstance(loglevel, int):
         loglevel = conf.LOG_LEVELS[loglevel.upper()]
-    if not detach:
-        logfile = None # log to stderr when not running in the background.
 
     # Dump configuration to screen so we have some basic information
     # when users sends e-mails.
     print(STARTUP_INFO_FMT % {
             "http_port": http_port,
             "conninfo": info.format_broker_info(),
-            "loglevel": loglevel,
-            "pidfile": pidfile,
     })
 
     from celery.log import setup_logger, redirect_stdouts_to_logger
@@ -130,23 +74,9 @@ def run_monitor(detach=False, loglevel=conf.CELERYMON_LOG_LEVEL,
     platform.set_process_title("celerymon",
                                info=" ".join(sys.argv[arg_start:]))
 
-    if detach:
-        context = platform.create_daemon_context(logfile, pidfile,
-                                        chroot_directory=chroot,
-                                        working_directory=working_directory,
-                                        umask=umask,
-                                        uid=uid,
-                                        gid=gid)
-        context.open()
-        logger = setup_logger(loglevel, logfile,
-                              format=conf.CELERYMON_LOG_FORMAT)
-        redirect_stdouts_to_logger(logger, loglevel)
-
-    def _run_clock():
+    def _run_monitor():
         logger = setup_logger(loglevel, logfile)
-        monitor = MonitorService(logger=logger,
-                                 is_detached=detach,
-                                 http_port=http_port)
+        monitor = MonitorService(logger=logger, http_port=http_port)
 
         try:
             monitor.start()
@@ -155,12 +85,7 @@ def run_monitor(detach=False, loglevel=conf.CELERYMON_LOG_LEVEL,
                     "celerymon raised exception %s: %s\n%s" % (
                             e.__class__, e, traceback.format_exc()))
 
-    try:
-        _run_clock()
-    except:
-        if detach:
-            context.close()
-        raise
+    _run_monitor()
 
 
 def parse_options(arguments):

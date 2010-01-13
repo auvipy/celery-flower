@@ -29,9 +29,8 @@ class MonitorService(object):
     """celerymon"""
 
 
-    def __init__(self, logger, is_detached=False, http_port=8989):
+    def __init__(self, logger, http_port=8989):
         self.logger = logger
-        self.is_detached = is_detached
         self.http_port = http_port
 
     def start(self):
