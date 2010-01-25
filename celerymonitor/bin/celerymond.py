@@ -22,11 +22,10 @@ import sys
 import traceback
 import optparse
 
+import celery
 from celery import conf
 from celery import platform
-from celery import __version__
 from celery.log import emergency_error
-from celery.loaders import settings
 from celery.utils import info
 
 from celerymonitor.service import MonitorService
@@ -55,7 +54,7 @@ def run_monitor(loglevel=conf.CELERYMON_LOG_LEVEL,
         logfile=conf.CELERYMON_LOG_FILE, http_port=8989, **kwargs):
     """Starts the celery monitor."""
 
-    print("celerymon %s is starting." % __version__)
+    print("celerymon %s is starting." % celery.__version__)
 
     # Setup logging
     if not isinstance(loglevel, int):
