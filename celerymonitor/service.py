@@ -34,5 +34,5 @@ class MonitorService(object):
         self.http_port = http_port
 
     def start(self):
-        MonitorListener(monitor_state).start()
         WebServerThread(port=self.http_port).start()
+        MonitorListener(monitor_state).start()
