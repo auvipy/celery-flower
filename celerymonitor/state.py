@@ -69,8 +69,12 @@ class MonitorState(object):
     def list_worker_tasks(self, hostname):
         alive_workers = self.list_workers()
         tasks_for_worker = defaultdict(lambda: [])
-        for hostname, when in alive_workers.items():
-            for task_id, task_info in self.tasks:
+        for worker in alive_workers:
+            try:
+                hostname, when = worker.items()[0]
+            except IndexError:
+                continue
+            for task_id, task_info in self.tasks.items():
                 if task_info["hostname"] == hostname:
                     tasks_for_worker[hostname].append(task_id)
         return tasks_for_worker
