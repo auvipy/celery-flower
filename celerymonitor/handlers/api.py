@@ -3,10 +3,8 @@ from functools import wraps
 import simplejson
 from tornado.web import RequestHandler, Application
 
-from celery import states
 from celery.task.control import revoke
-
-from celery.events.state import state
+from celerymonitor.state import monitor_state
 
 
 def JSON(fun):
@@ -37,35 +35,32 @@ def api_handler(fun):
 
 @api_handler
 def task_state(request, task_id):
-    task = state.tasks[task_id]
-    if task.state in states.EXCEPTION_STATES:
-        return task.info(extra=["traceback"])
-    return task.info()
+    return monitor_state.get_task_info(task_id)
 
 
 @api_handler
 def list_tasks(request):
-    return state.tasks_by_timestamp()
+    return monitor_state.tasks_by_time()
 
 
 @api_handler
 def list_tasks_by_name(request, name):
-    return state.tasks_by_type(name)
+    return monitor_state.tasks_by_type()[name]
 
 
 @api_handler
 def list_task_types(request):
-    return state.task_types()
+    return monitor_state.tasks_by_type()
 
 
 @api_handler
 def list_workers(request):
-    return state.alive_workers()
+    return monitor_state.list_workers()
 
 
 @api_handler
 def list_worker_tasks(request, hostname):
-    return state.list_worker_tasks(hostname)
+    return monitor_state.list_worker_tasks(hostname)
 
 
 class RevokeTaskHandler(APIHandler):
