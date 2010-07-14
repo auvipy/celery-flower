@@ -1,6 +1,6 @@
 from functools import wraps
 
-import anyjsn
+import anyjson
 from tornado.web import RequestHandler, Application
 
 from celery.task.control import revoke
