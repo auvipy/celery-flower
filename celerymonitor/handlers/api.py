@@ -1,6 +1,6 @@
 from functools import wraps
 
-import simplejson
+import anyjsn
 from tornado.web import RequestHandler, Application
 
 from celery.task.control import revoke
@@ -12,7 +12,7 @@ def JSON(fun):
     @wraps(fun)
     def _write_json(self, *args, **kwargs):
         content = fun(self, *args, **kwargs)
-        self.write(simplejson.dumps(content))
+        self.write(anyjson.serialize(content))
 
     return _write_json
 
