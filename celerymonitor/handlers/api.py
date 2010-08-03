@@ -1,7 +1,7 @@
 from functools import wraps
 
 import anyjson
-from tornado.web import RequestHandler, Application
+from tornado.web import RequestHandler, HTTPError
 
 from celery import states
 from celery.task.control import revoke
@@ -45,12 +45,16 @@ def task_state(request, task_id):
 
 @api_handler
 def list_tasks(request):
-    return state.tasks_by_timestamp()
+    limit = request.get_argument("limit", None)
+    limit = limit and int(limit) or None
+    return state.tasks_by_timestamp(limit=limit)
 
 
 @api_handler
 def list_tasks_by_name(request, name):
-    return state.tasks_by_type(name)
+    limit = request.get_argument("limit", None)
+    limit = limit and int(limit) or None
+    return state.tasks_by_type(name, limit=limit)
 
 
 @api_handler
@@ -64,8 +68,18 @@ def list_workers(request):
 
 
 @api_handler
+def show_worker(request, node_name):
+    try:
+        return state.workers[node_name]
+    except KeyError:
+        raise HTTPError(404, "Unknown worker node: %s" % (node_name, ))
+
+
+@api_handler
 def list_worker_tasks(request, hostname):
-    return state.list_worker_tasks(hostname)
+    limit = request.get_argument("limit", None)
+    limit = limit and int(limit) or None
+    return state.tasks_by_worker(hostname, limit=limit)
 
 
 class RevokeTaskHandler(APIHandler):
@@ -81,10 +95,11 @@ class RevokeTaskHandler(APIHandler):
 
 API = [
        (r"/task/name/$", list_task_types),
-       (r"/task/name/(.+?)", list_tasks_by_name),
+       (r"/task/name/(.+?)/?", list_tasks_by_name),
        (r"/task/$", list_tasks),
        (r"/revoke/task/", RevokeTaskHandler),
-       (r"/task/(.+)", task_state),
+       (r"/task/(.+)/?", task_state),
        (r"/worker/", list_workers),
-       (r"/worker/(.+?)/tasks", list_worker_tasks),
+       (r"/worker/(.+?)/tasks/?", list_worker_tasks),
+       (r"/worker/(.+?)/?", show_worker),
 ]

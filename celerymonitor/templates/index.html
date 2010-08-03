@@ -1,0 +1,21 @@
+<h1>Celery Real-Time Monitor</h1>
+
+
+<h2>API</h2>
+
+<ul>
+    <li><code>/api/task/name/</code>
+        <p><a href="/api/task/name/">List seen task types.</a></p></li>
+    <li><code>/api/task/name/$task_name/?limit=0</code>
+        <p>List all tasks by type.</p></li>
+    <li><code>/api/task/?limit=0</code>
+    <p><a href="/api/task/?limit=0">List all tasks</a></p></li>
+    <li><code>/api/task/$task_id/</code>
+    <p>Show task by UUID.</p></li>
+    <li><code>/api/worker/</code>
+    <p><a href="/api/worker/">List all seen worker nodes.</a></p></li>
+    <li><code>/api/worker/$node_name/tasks/?limit=0</code>
+        <p>Show tasks executed by worker.</p></li>
+    <li><code>/api/worker/$node_name/</code>
+    <p>Show worker status.</p></li>
+</ul>

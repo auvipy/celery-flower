@@ -4,7 +4,7 @@ from tornado import httpserver
 from tornado import ioloop
 from tornado.web import Application
 
-from celerymonitor.handlers import api
+from celerymonitor.handlers import api, main
 
 
 class Site(Application):
@@ -29,6 +29,7 @@ class WebServerThread(threading.Thread):
     def run(self):
         site = Site([
             (r"/api", api.API),
+            (r"", main.MAIN),
         ])
         http_server = httpserver.HTTPServer(site)
         http_server.listen(self.port)
