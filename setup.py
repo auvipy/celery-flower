@@ -45,15 +45,6 @@ install_requires = [
     "tornado"
 ]
 
-# python-daemon doesn't run on windows, so check current platform
-if platform.system() == "Windows":
-    print("""
-    ***WARNING***
-    I see you are using windows. You will not be able to run celerymon
-    in daemon mode with the --detach parameter.""")
-else:
-    install_requires.append("python-daemon>=1.4.8")
-
 if os.path.exists("README.rst"):
     long_description = codecs.open("README.rst", "r", "utf-8").read()
 else:
