@@ -7,6 +7,10 @@
 
     Port the webserver should listen to. Default: ``8989``.
 
+.. cmdoption:: -A, --address
+
+    Address the webserver should listen to. Default (any).
+
 .. cmdoption:: -f, --logfile
 
     Path to log file. If no logfile is specified, ``stderr`` is used.
@@ -33,7 +37,7 @@ from celerymonitor.service import MonitorService
 STARTUP_INFO_FMT = """
 Configuration ->
     . broker -> %(conninfo)s
-    . webserver -> http://localhost:%(http_port)s
+    . webserver -> http://%(http_address)s:%(http_port)s
 """.strip()
 
 OPTION_LIST = (
@@ -47,11 +51,16 @@ OPTION_LIST = (
     optparse.make_option('-P', '--port',
             action="store", type="int", dest="http_port", default=8989,
             help="Port the webserver should listen to."),
+    optparse.make_option('-A', '--address',
+            action="store", type="string", dest="http_address",
+            default="",
+            help="Address the webserver should listen to. Default (any)."),
 )
 
 
 def run_monitor(loglevel=conf.CELERYMON_LOG_LEVEL,
-        logfile=conf.CELERYMON_LOG_FILE, http_port=8989, **kwargs):
+        logfile=conf.CELERYMON_LOG_FILE, http_port=8989,
+        http_address='', **kwargs):
     """Starts the celery monitor."""
 
     print("celerymon %s is starting." % celery.__version__)
@@ -64,6 +73,7 @@ def run_monitor(loglevel=conf.CELERYMON_LOG_LEVEL,
     # when users sends e-mails.
     print(STARTUP_INFO_FMT % {
             "http_port": http_port,
+            "http_address": http_address or "localhost",
             "conninfo": info.format_broker_info(),
     })
 
@@ -75,7 +85,9 @@ def run_monitor(loglevel=conf.CELERYMON_LOG_LEVEL,
 
     def _run_monitor():
         logger = setup_logger(loglevel, logfile)
-        monitor = MonitorService(logger=logger, http_port=http_port)
+        monitor = MonitorService(logger=logger,
+                                 http_port=http_port,
+                                 http_address=http_address)
 
         try:
             monitor.start()

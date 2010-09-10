@@ -21,9 +21,10 @@ class Site(Application):
 
 class WebServerThread(threading.Thread):
 
-    def __init__(self, port=8989):
+    def __init__(self, port=8989, address=''):
         super(WebServerThread, self).__init__()
         self.port = port
+        self.address = address
         self.setDaemon(True)
 
     def run(self):
@@ -32,5 +33,5 @@ class WebServerThread(threading.Thread):
             (r"", main.MAIN),
         ])
         http_server = httpserver.HTTPServer(site)
-        http_server.listen(self.port)
+        http_server.listen(self.port, address=self.address)
         ioloop.IOLoop.instance().start()
