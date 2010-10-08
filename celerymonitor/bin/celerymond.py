@@ -28,7 +28,7 @@ import optparse
 
 import celery
 from celery import conf
-from celery import platform
+from celery import platforms
 from celery.log import emergency_error
 from celery.utils import info
 
@@ -80,7 +80,7 @@ def run_monitor(loglevel=conf.CELERYMON_LOG_LEVEL,
     from celery.log import setup_logger, redirect_stdouts_to_logger
     print("celerymon has started.")
     arg_start = "manage" in sys.argv[0] and 2 or 1
-    platform.set_process_title("celerymon",
+    platforms.set_process_title("celerymon",
                                info=" ".join(sys.argv[arg_start:]))
 
     def _run_monitor():
