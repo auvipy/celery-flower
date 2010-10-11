@@ -2,6 +2,11 @@
 Change history
 ==============
 
+0.2.2
+=====
+
+* Updated to work with Celery v2.1.0.
+
 0.1.0 [xxxx-xx-xx xx:xx x.x xxx]
 ================================
 
