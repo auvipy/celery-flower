@@ -27,10 +27,10 @@ import traceback
 import optparse
 
 import celery
-from celery import conf
 from celery import platforms
-from celery.log import emergency_error
-from celery.utils import info
+from celery.app import app_or_default
+from celery.bin.base import Command, Option
+from celery.utils import LOG_LEVELS
 
 from celerymonitor.service import MonitorService
 
@@ -41,74 +41,75 @@ Configuration ->
 """.strip()
 
 OPTION_LIST = (
-    optparse.make_option('-f', '--logfile', default=conf.CELERYMON_LOG_FILE,
-            action="store", dest="logfile",
-            help="Path to log file."),
-    optparse.make_option('-l', '--loglevel',
-            default=conf.CELERYMON_LOG_LEVEL,
-            action="store", dest="loglevel",
-            help="Choose between DEBUG/INFO/WARNING/ERROR/CRITICAL/FATAL."),
-    optparse.make_option('-P', '--port',
-            action="store", type="int", dest="http_port", default=8989,
-            help="Port the webserver should listen to."),
-    optparse.make_option('-A', '--address',
-            action="store", type="string", dest="http_address",
-            default="",
-            help="Address the webserver should listen to. Default (any)."),
 )
 
 
-def run_monitor(loglevel=conf.CELERYMON_LOG_LEVEL,
-        logfile=conf.CELERYMON_LOG_FILE, http_port=8989,
-        http_address='', **kwargs):
-    """Starts the celery monitor."""
+class MonitorCommand(Command):
+    namespace = "celerymon"
+    enable_config_from_cmdline = True
 
-    print("celerymon %s is starting." % celery.__version__)
+    def run(self, loglevel="ERROR", logfile=None, http_port=8989,
+            http_address='', app=None, **kwargs):
+        print("celerymon %s is starting." % celery.__version__)
+        app = self.app
 
-    # Setup logging
-    if not isinstance(loglevel, int):
-        loglevel = conf.LOG_LEVELS[loglevel.upper()]
+        # Setup logging
+        if not isinstance(loglevel, int):
+            loglevel = LOG_LEVELS[loglevel.upper()]
 
-    # Dump configuration to screen so we have some basic information
-    # when users sends e-mails.
-    print(STARTUP_INFO_FMT % {
-            "http_port": http_port,
-            "http_address": http_address or "localhost",
-            "conninfo": info.format_broker_info(),
-    })
+        # Dump configuration to screen so we have some basic information
+        # when users sends e-mails.
+        print(STARTUP_INFO_FMT % {
+                "http_port": http_port,
+                "http_address": http_address or "localhost",
+                "conninfo": app.amqp.format_broker_info(),
+        })
 
-    from celery.log import setup_logger, redirect_stdouts_to_logger
-    print("celerymon has started.")
-    arg_start = "manage" in sys.argv[0] and 2 or 1
-    platforms.set_process_title("celerymon",
-                               info=" ".join(sys.argv[arg_start:]))
+        print("celerymon has started.")
+        arg_start = "manage" in sys.argv[0] and 2 or 1
+        platforms.set_process_title("celerymon",
+                                    info=" ".join(sys.argv[arg_start:]))
 
-    def _run_monitor():
-        logger = setup_logger(loglevel, logfile)
-        monitor = MonitorService(logger=logger,
-                                 http_port=http_port,
-                                 http_address=http_address)
+        def _run_monitor():
+            app.log.setup_logging_subsystem(loglevel=loglevel,
+                                            logfile=logfile)
+            logger = app.log.get_default_logger(name="celery.mon")
+            monitor = MonitorService(logger=logger,
+                                     http_port=http_port,
+                                     http_address=http_address)
 
-        try:
-            monitor.start()
-        except Exception, e:
-            emergency_error(logfile,
-                    "celerymon raised exception %s: %s\n%s" % (
-                            e.__class__, e, traceback.format_exc()))
+            try:
+                monitor.start()
+            except Exception, exc:
+                logger.error("celerymon raised exception %r\n%s" % (
+                                exc, traceback.format_exc()))
 
-    _run_monitor()
+        _run_monitor()
 
-
-def parse_options(arguments):
-    """Parse the available options to ``celerymon``."""
-    parser = optparse.OptionParser(option_list=OPTION_LIST)
-    options, values = parser.parse_args(arguments)
-    return options
+    def get_options(self):
+        conf = self.app.conf
+        return (
+            Option('-f', '--logfile', default=conf.CELERYMON_LOG_FILE,
+                    action="store", dest="logfile",
+                    help="Path to log file."),
+            Option('-l', '--loglevel',
+                    default=conf.CELERYMON_LOG_LEVEL,
+                    action="store", dest="loglevel",
+                    help="Choose between DEBUG/INFO/WARNING/ERROR/CRITICAL."),
+            Option('-P', '--port',
+                action="store", type="int", dest="http_port", default=8989,
+                help="Port the webserver should listen to."),
+        Option('-A', '--address',
+                action="store", type="string", dest="http_address",
+                default="",
+                help="Address webserver should listen to. Default (any)."),
+    )
 
 
 def main():
-    options = parse_options(sys.argv[1:])
-    run_monitor(**vars(options))
+    mon = MonitorCommand()
+    mon.execute_from_commandline()
+
 
 if __name__ == "__main__":
     main()
