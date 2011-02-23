@@ -1,6 +1,6 @@
 """Real-time monitoring of Celery workers."""
 
-VERSION = (0, 2, 2)
+VERSION = (0, 3, 0)
 
 __version__ = ".".join(map(str, VERSION))
 __author__ = "Ask Solem"

@@ -2,7 +2,7 @@
  celerymon - Real-time monitoring of Celery workers
 ====================================================
 
-:Version: 0.2.2
+:Version: 0.3.0
 
 Introduction
 ============
