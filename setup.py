@@ -112,7 +112,6 @@ setup(
     license="BSD",
     packages=packages,
     data_files=data_files,
-    scripts=["bin/celerymon"],
     zip_safe=False,
     install_requires=install_requires,
     cmdclass = {"test": RunTests},
