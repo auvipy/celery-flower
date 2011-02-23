@@ -62,7 +62,7 @@ class MonitorCommand(Command):
         print(STARTUP_INFO_FMT % {
                 "http_port": http_port,
                 "http_address": http_address or "localhost",
-                "conninfo": app.amqp.format_broker_info(),
+                "conninfo": app.broker_connection().as_uri(),
         })
 
         print("celerymon has started.")
