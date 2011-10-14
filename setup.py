@@ -92,7 +92,8 @@ class RunTests(Command):
 
 install_requires = [
     "celery",
-    "tornado"
+    "tornado",
+    "python-daemon",
 ]
 
 if os.path.exists("README.rst"):
