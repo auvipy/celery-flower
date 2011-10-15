@@ -17,12 +17,17 @@
 
 .. cmdoption:: -l, --loglevel
 
+.. cmdoption:: -D, --detach
+
+    Daemonize celerymon.
+
     Logging level, choose between ``DEBUG``, ``INFO``, ``WARNING``,
     ``ERROR``, ``CRITICAL``, or ``FATAL``.
 
 """
 import os
 import sys
+import daemon
 import traceback
 import optparse
 
@@ -84,7 +89,11 @@ class MonitorCommand(Command):
                 logger.error("celerymon raised exception %r\n%s" % (
                                 exc, traceback.format_exc()))
 
-        _run_monitor()
+        if kwargs.has_key('detach') and kwargs['detach']:
+            with daemon.DaemonContext():
+                _run_monitor()
+        else:
+            _run_monitor()
 
     def get_options(self):
         conf = self.app.conf
@@ -103,6 +112,11 @@ class MonitorCommand(Command):
                 action="store", type="string", dest="http_address",
                 default="",
                 help="Address webserver should listen to. Default (any)."),
+        Option('-D', '--detach',
+                action="store_true", dest="detach",
+                default=False,
+                help="Run as daemon."),
+
     )
 
 

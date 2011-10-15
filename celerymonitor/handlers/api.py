@@ -37,7 +37,10 @@ def api_handler(fun):
 
 @api_handler
 def task_state(request, task_id):
-    task = state.tasks[task_id]
+    try:
+        task = state.tasks[task_id.strip('/')]
+    except KeyError:
+        raise HTTPError(404, "Unknown task: %s" % task_id)
     if task.state in states.EXCEPTION_STATES:
         return task.info(extra=["traceback"])
     return task.info()
