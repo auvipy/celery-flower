@@ -14,13 +14,13 @@ except ImportError:
 from distutils.command.install_data import install_data
 from distutils.command.install import INSTALL_SCHEMES
 
-import celerymonitor as distmeta
+import celerymon as distmeta
 
 packages, data_files = [], []
 root_dir = os.path.dirname(__file__)
 if root_dir != '':
     os.chdir(root_dir)
-src_dir = "celerymonitor"
+src_dir = "celerymon"
 
 def osx_install_data(install_data):
 
@@ -91,9 +91,8 @@ class RunTests(Command):
         os.chdir(this_dir)
 
 install_requires = [
-    "celery",
+    "celery>=2.3",
     "tornado",
-    "python-daemon",
 ]
 
 if os.path.exists("README.rst"):
@@ -120,7 +119,6 @@ setup(
         "Development Status :: 3 - Alpha",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2.4",
         "Programming Language :: Python :: 2.5",
         "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
@@ -131,7 +129,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "celerymon = celerymonitor.bin.celerymond:main",
+            "celerymon = celerymon.bin.celerymon:main",
         ],
     },
     long_description=long_description,

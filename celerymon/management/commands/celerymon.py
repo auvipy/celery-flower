@@ -1,12 +1,9 @@
-"""
+from __future__ import absolute_import
 
-Start the celery clock service from the Django management command.
-
-"""
 from djcelery.app import app
 from djcelery.management.base import CeleryCommand
 
-from celerymonitor.bin.celerymond import MonitorCommand
+from celerymon.bin.celerymon import MonitorCommand
 
 monitor = MonitorCommand(app=app)
 

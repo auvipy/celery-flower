@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from functools import wraps
 
 import anyjson
@@ -5,7 +7,6 @@ from tornado.web import RequestHandler, HTTPError
 
 from celery import states
 from celery.task.control import revoke
-
 from celery.events.state import state
 
 

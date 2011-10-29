@@ -1,6 +1,8 @@
+from __future__ import absolute_import
+
 import os
 
-from tornado.web import RequestHandler, Application, HTTPError
+from tornado.web import RequestHandler
 
 
 def T(name):
@@ -15,17 +17,9 @@ def handler(fun):
     return type(fun.__name__, (RequestHandler, ), {"get": get})
 
 
-
 @handler
 def index(request):
     return request.render(T("index"))
 
 
-
-MAIN = [
-        (r"/$", index),
-]
-
-
-
-
+MAIN = [(r"/$", index)]

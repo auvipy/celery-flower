@@ -25,19 +25,19 @@
     ``ERROR``, ``CRITICAL``, or ``FATAL``.
 
 """
+from __future__ import absolute_import
+from __future__ import with_statement
+
 import os
 import sys
-import daemon
 import traceback
-import optparse
 
-import celery
-from celery import platforms
-from celery.app import app_or_default
-from celery.bin.base import Command, Option
+from celery.bin.base import Command, Option, daemon_options
+from celery.platforms import detached, set_process_title, strargv
 from celery.utils import LOG_LEVELS
 
-from celerymonitor.service import MonitorService
+from .. import __version__
+from ..service import MonitorService
 
 STARTUP_INFO_FMT = """
 Configuration ->
@@ -52,11 +52,15 @@ OPTION_LIST = (
 class MonitorCommand(Command):
     namespace = "celerymon"
     enable_config_from_cmdline = True
+    preload_options = Command.preload_options + daemon_options("celerymon.pid")
+    version = __version__
 
     def run(self, loglevel="ERROR", logfile=None, http_port=8989,
-            http_address='', app=None, **kwargs):
-        print("celerymon %s is starting." % celery.__version__)
+            http_address='', app=None, detach=False, pidfile=None,
+            uid=None, gid=None, umask=None, working_directory=None, **kwargs):
+        print("celerymon %s is starting." % (self.version, ))
         app = self.app
+        workdir = working_directory
 
         # Setup logging
         if not isinstance(loglevel, int):
@@ -71,9 +75,7 @@ class MonitorCommand(Command):
         })
 
         print("celerymon has started.")
-        arg_start = "manage" in sys.argv[0] and 2 or 1
-        platforms.set_process_title("celerymon",
-                                    info=" ".join(sys.argv[arg_start:]))
+        set_process_title("celerymon", info=strargv(sys.argv))
 
         def _run_monitor():
             app.log.setup_logging_subsystem(loglevel=loglevel,
@@ -88,36 +90,37 @@ class MonitorCommand(Command):
             except Exception, exc:
                 logger.error("celerymon raised exception %r\n%s" % (
                                 exc, traceback.format_exc()))
+            except KeyboardInterrupt:
+                pass
 
-        if kwargs.has_key('detach') and kwargs['detach']:
-            with daemon.DaemonContext():
+        if detach:
+            with detached(logfile, pidfile, uid, gid, umask, workdir):
                 _run_monitor()
         else:
             _run_monitor()
 
+    def prepare_preload_options(self, options):
+        workdir = options.get("working_directory")
+        if workdir:
+            os.chdir(workdir)
+
     def get_options(self):
         conf = self.app.conf
-        return (
-            Option('-f', '--logfile', default=conf.CELERYMON_LOG_FILE,
-                    action="store", dest="logfile",
-                    help="Path to log file."),
-            Option('-l', '--loglevel',
+        return (Option('-l', '--loglevel',
                     default=conf.CELERYMON_LOG_LEVEL,
                     action="store", dest="loglevel",
                     help="Choose between DEBUG/INFO/WARNING/ERROR/CRITICAL."),
-            Option('-P', '--port',
-                action="store", type="int", dest="http_port", default=8989,
-                help="Port the webserver should listen to."),
-        Option('-A', '--address',
-                action="store", type="string", dest="http_address",
-                default="",
-                help="Address webserver should listen to. Default (any)."),
-        Option('-D', '--detach',
-                action="store_true", dest="detach",
-                default=False,
-                help="Run as daemon."),
-
-    )
+                Option('-P', '--port',
+                    action="store", type="int", dest="http_port", default=8989,
+                    help="Port the webserver should listen to."),
+                Option('-A', '--address',
+                    action="store", type="string", dest="http_address",
+                    default="",
+                    help="Address webserver should listen to. Default (any)."),
+                Option('-D', '--detach',
+                    action="store_true", dest="detach",
+                    default=False,
+                    help="Run as daemon."))
 
 
 def main():

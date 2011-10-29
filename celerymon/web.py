@@ -1,10 +1,12 @@
+from __future__ import absolute_import
+
 import threading
 
 from tornado import httpserver
 from tornado import ioloop
 from tornado.web import Application
 
-from celerymonitor.handlers import api, main
+from .handlers import api, main
 
 
 class Site(Application):
