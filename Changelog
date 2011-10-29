@@ -2,6 +2,26 @@
 Change history
 ==============
 
+0.4.0
+=====
+
+* No longer supports Python 2.4
+
+* Requires Celery >= 2.3
+
+* Package renamed from ``celerymonitor`` -> ``celerymon``.
+
+    The long name was used because of relative imports clashes,
+    but this is no longer an issue since we have dropped
+    Python 2.4 support and can force absolute imports.
+
+* celerymon can now be daemonized using the `--detach` option.
+
+    Additional daemon related options are available, see ``celerymon --help``
+    for a list of these.
+
+    Contributed by Juan Catalano.
+
 0.3.0
 =====
 
