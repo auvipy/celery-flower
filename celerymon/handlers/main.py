@@ -2,11 +2,12 @@ from __future__ import absolute_import
 
 import os
 
-from tornado.web import RequestHandler
+from tornado.web import RequestHandler, StaticFileHandler
+from tornado.template import Template
 
-
-def T(name):
-    return os.path.join(os.pardir, "templates", "%s.html" % name)
+from celery import states
+from celery.task.control import revoke
+from celery.events.state import state
 
 
 def handler(fun):
@@ -19,7 +20,8 @@ def handler(fun):
 
 @handler
 def index(request):
-    return request.render(T("index"))
+    return request.render("index.html", title="Celerymon")
 
-
-MAIN = [(r"/$", index)]
+@handler
+def api_detail(request):
+    return request.render("api_detail.html", title = "API")

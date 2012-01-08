@@ -1,21 +1,148 @@
-<h1>Celery Real-Time Monitor</h1>
+{% extends "template.html" %}
 
+{% block title %}{{ title }}{% end %}
 
-<h2>API</h2>
-
-<ul>
-    <li><code>/api/task/name/</code>
-        <p><a href="/api/task/name/">List seen task types.</a></p></li>
-    <li><code>/api/task/name/$task_name/?limit=0</code>
-        <p>List all tasks by type.</p></li>
-    <li><code>/api/task/?limit=0</code>
-    <p><a href="/api/task/?limit=0">List all tasks</a></p></li>
-    <li><code>/api/task/$task_id/</code>
-    <p>Show task by UUID.</p></li>
-    <li><code>/api/worker/</code>
-    <p><a href="/api/worker/">List all seen worker nodes.</a></p></li>
-    <li><code>/api/worker/$node_name/tasks/?limit=0</code>
-        <p>Show tasks executed by worker.</p></li>
-    <li><code>/api/worker/$node_name/</code>
-    <p>Show worker status.</p></li>
-</ul>
+{% block content %}
+    
+	<div id="task_chart"></div>
+	
+	<script type="text/javascript">
+		
+		var chart;
+		var last_request = Math.round((new Date()).getTime() / 1000);
+		
+		function requestData() {
+            plot_time = (new Date());
+            before_last_request = Math.round(plot_time.getTime() / 1000);
+			$.getJSON('/api/task/?since='+last_request, function(data) {
+				
+				last_request = Math.round((new Date()).getTime() / 1000);
+                var valueAll = 0;
+				var valuePending = 0;
+				var valueStarted = 0;
+				var valueSuccess = 0;
+				var valueFailure = 0;
+				var valueRetry = 0;
+				var valueRevoked = 0;
+                
+				var shift = chart.series[0].data.length > 60;
+				
+				valueAll = data.length
+                $.each(data, function(index, value) {
+                    switch (value[1].state) {
+                        case 'PENDING':
+                            valuePending++;
+                            break;
+                        case 'STARTED':
+                            valueStarted++;
+                            break;
+                        case 'SUCCESS':
+                            valueSuccess++;
+                            break;
+                        case 'FAILURE':
+                            valueFailure++;
+                            break;
+                        case 'RETRY':
+                            valueRetry++;
+                            break;
+                        case 'REVOKED':
+                            valueRevoked++;
+                            break;
+                    }
+                });
+				
+				chart.series[0].addPoint([plot_time.getTime(), valueAll], true, shift);
+				chart.series[1].addPoint([plot_time.getTime(), valuePending], true, shift);
+				chart.series[2].addPoint([plot_time.getTime(), valueStarted], true, shift);
+				chart.series[3].addPoint([plot_time.getTime(), valueSuccess], true, shift);
+				chart.series[4].addPoint([plot_time.getTime(), valueFailure], true, shift);
+				chart.series[5].addPoint([plot_time.getTime(), valueRetry], true, shift);
+				chart.series[6].addPoint([plot_time.getTime(), valueRevoked], true, shift);
+                
+                last_request = before_last_request;
+				setTimeout(requestData, 5000);
+                
+			});
+		}
+		
+		$(document).ready(function() {
+		   
+			// define the options
+			var options = {
+		 
+				chart: {
+					renderTo: 'task_chart',
+                    marginBottom: 50,
+                    marginLeft: 30,
+					events: {
+						load: requestData
+					}
+				},
+				title: {
+					text: 'Task Monitor'
+				},
+				subtitle: {
+					text: 'Task Events Received per 5 second period'
+				},
+				xAxis: {
+					type: 'datetime',
+					tickPixelInterval: 150
+				},
+				yAxis: {
+					minPadding: 0.2,
+					maxPadding: 0.2,
+					title: {
+						text: 'Value',
+						margin: 80
+					},
+					min: 0,
+                    allowDecimals: false
+				},
+                tooltip: {
+                    formatter: function() {
+                        return '<b>'+ this.series.name +'</b><br/>'+
+                            Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) +'<br/>'+ 
+                            Highcharts.numberFormat(this.y, 2);
+                    }
+                },
+				series: [{
+					name: 'All Events',
+					data: []
+				}, {
+					name: 'Pending',
+					data: []
+				}, {
+					name: 'Started',
+					data: []
+				}, {
+					name: 'Success',
+					data: []
+				}, {
+					name: 'Failure',
+					data: []
+				}, {
+					name: 'Retry',
+					data: []
+				}, {
+					name: 'Revoked',
+					data: []
+                }],
+                legend: {
+                    align: 'center',
+                    verticalAlign: 'bottom',
+                    y: 7,
+                    floating: true,
+                    borderWidth: 0
+                },
+                tooltip: {
+                    shared: true,
+                    crosshairs: true
+                }
+			};
+			chart = new Highcharts.Chart(options);
+			
+		});
+		   
+	</script>
+	
+{% end %}

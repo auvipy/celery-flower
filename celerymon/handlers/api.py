@@ -51,7 +51,24 @@ def task_state(request, task_id):
 def list_tasks(request):
     limit = request.get_argument("limit", None)
     limit = limit and int(limit) or None
-    return state.tasks_by_timestamp(limit=limit)
+    
+    since = request.get_argument("since", None)
+    since = since and int(since) or None
+    
+    if not since:
+        return state.tasks_by_timestamp(limit=limit)
+    else:
+        tasks = state.tasks_by_timestamp(limit=limit)
+        if not tasks:
+            return []
+        tasks_since = []
+        for task in tasks:
+            id, data = task
+            if data.timestamp > since:
+                tasks_since.append(task)
+            else:
+                return tasks_since
+        return tasks_since
 
 
 @api_handler
@@ -95,15 +112,3 @@ class RevokeTaskHandler(APIHandler):
         task_id = self.get_argument("task_id")
         revoke(task_id)
         return {"ok": True}
-
-
-API = [
-       (r"/task/name/$", list_task_types),
-       (r"/task/name/(.+?)/?", list_tasks_by_name),
-       (r"/task/$", list_tasks),
-       (r"/revoke/task/", RevokeTaskHandler),
-       (r"/task/(.+)/?", task_state),
-       (r"/worker/", list_workers),
-       (r"/worker/(.+?)/tasks/?", list_worker_tasks),
-       (r"/worker/(.+?)/?", show_worker),
-]
