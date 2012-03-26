@@ -33,7 +33,7 @@ import sys
 import traceback
 
 from celery.bin.base import Command, Option, daemon_options
-from celery.platforms import detached, set_process_title, strargv
+from celery.platforms import detached, set_process_title, strargv, create_pidlock
 from celery.utils import LOG_LEVELS
 
 from .. import __version__
@@ -95,7 +95,8 @@ class MonitorCommand(Command):
 
         if detach:
             with detached(logfile, pidfile, uid, gid, umask, workdir):
-                _run_monitor()
+                with create_pidlock(pidfile) as pidlock:
+                    _run_monitor()
         else:
             _run_monitor()
 
