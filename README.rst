@@ -4,9 +4,6 @@
 
 :Version: 0.4.0
 
-Introduction
-============
-
 Installation
 =============
 
@@ -85,10 +82,9 @@ please join the `celery-users`_ mailing list.
 IRC
 ---
 
-Come chat with us on IRC. The `#celery`_ channel is located at the `Freenode`_
+Come chat with us on IRC. The **#celery** channel is located at the `Freenode`_
 network.
 
-.. _`#celery`: irc://irc.freenode.net/celery
 .. _`Freenode`: http://freenode.net
 
 
