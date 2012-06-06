@@ -39,7 +39,7 @@ Using the development version
 
 You can clone the repository by doing the following::
 
-    $ git clone git://github.com/ask/celerymon.git
+    $ git clone git://github.com/celery/celerymon.git
 
 
 Usage
@@ -96,13 +96,13 @@ Bug tracker
 ===========
 
 If you have any suggestions, bug reports or annoyances please report them
-to our issue tracker at http://github.com/ask/celerymon/issues/
+to our issue tracker at http://github.com/celery/celerymon/issues/
 
 Contributing
 ============
 
 Development of ``celerymon`` happens at Github:
-http://github.com/ask/celerymon
+http://github.com/celery/celerymon
 
 You are highly encouraged to participate in the development
 of ``celerymon``. If you don't like Github (for some reason) you're welcome
