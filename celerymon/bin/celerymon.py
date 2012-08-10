@@ -7,9 +7,9 @@
 
     Port the webserver should listen to. Default: ``8989``.
 
-.. cmdoption:: -A, --address
+.. cmdoption:: -B, --bind
 
-    Address the webserver should listen to. Default (any).
+    Address the webserver should bind to. Default (any).
 
 .. cmdoption:: -f, --logfile
 
@@ -113,7 +113,7 @@ class MonitorCommand(Command):
                 Option('-P', '--port',
                     action="store", type="int", dest="http_port", default=8989,
                     help="Port the webserver should listen to."),
-                Option('-A', '--address',
+                Option('-B', '--bind',
                     action="store", type="string", dest="http_address",
                     default="",
                     help="Address webserver should listen to. Default (any)."),
