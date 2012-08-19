@@ -131,6 +131,9 @@ setup(
         "console_scripts": [
             "celerymon = celerymon.bin.celerymon:main",
         ],
+        "celery.commands": [
+            "mon = celerymon.bin.celerymon:MonitorDelegate",
+        ],
     },
     long_description=long_description,
 )

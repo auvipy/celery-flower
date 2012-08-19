@@ -33,6 +33,7 @@ import sys
 import traceback
 
 from celery.bin.base import Command, Option, daemon_options
+from celery.bin.celery import Delegate
 from celery.platforms import detached, set_process_title, strargv
 from celery.utils import LOG_LEVELS
 
@@ -121,6 +122,10 @@ class MonitorCommand(Command):
                     action="store_true", dest="detach",
                     default=False,
                     help="Run as daemon."))
+
+
+class MonitorDelegate(Delegate):
+    Command = MonitorCommand
 
 
 def main():
