@@ -1,0 +1,73 @@
+
+
+<html xml:lang="en" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	
+	<title>{% block title %}Celerymon{% end %} | Celery: Distributed Task Queue</title>
+    
+	<meta charset="UTF-8" />
+    
+	<link rel="icon" type="image/png" href="/static/favicon.ico" />
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:regular,bold' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" href="/static/css/master.css" type="text/css" />
+    
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript"></script>
+	<script src="/static/highcharts/js/highcharts.js" type="text/javascript"></script>
+	
+</head>
+
+<body>
+
+	<div id="nav">
+		<ul class="container">
+			<li id="home"><a href="/"><img src="/static/images/logo.png" alt="Celery Mon"></a></li>
+			<li><a href="/">TASK MONITOR</a></li>
+			<li><a href="/api/">API DETAILS</a></li>
+		</ul>
+	</div>
+	
+	<div id="maincontent" class="container lastnews">
+	
+		{% block content %}
+		
+			<h1>Celery Real-Time Monitor API</h1>
+			
+			<h3><code>/api/task/name/$task_name/?limit=0</code></h3>
+			<p>List all tasks by type.</p>
+			
+			<h3><code>/api/task/name/</code></h3>
+			<p><a href="/api/task/name/">List seen task types.</a></p>
+			
+			<h3><code>/api/task/?limit=0</code></h3>
+			<p><a href="/api/task/?limit=0">List all tasks</a></p>
+			
+			<h3><code>/api/task/$task_id/</code></h3>
+			<p>Show task by UUID.</p>
+			
+			<h3><code>/api/worker/</code></h3>
+			<p><a href="/api/worker/">List all seen worker nodes.</a></p>
+			
+			<h3><code>/api/worker/$node_name/tasks/?limit=0</code></h3>
+			<p>Show tasks executed by worker.</p>
+			
+			<h3><code>/api/worker/$node_name/</code></h3>
+			<p>Show worker status.</p>
+			
+		{% end %}
+		
+	</div>
+	  
+	<div id="feeds" class="container">
+		&nbsp;
+	</div>
+	
+	<div class="container" id="footer">
+		<div id="credits">
+			<p>&copy; 2007&ndash;2011 <a href="http://twitter.com/asksol">Ask Solem</a> and <a href="http://github.com/ask/celery/blob/master/AUTHORS">contributors</a>, with <a href="http://creativecommons.org/licenses/by-nd/3.0/">some rights reserved</a>.</p>
+		</div>
+	</div>	
+
+</body>
+
+</html>
+	

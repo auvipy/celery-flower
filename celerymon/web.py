@@ -1,24 +1,13 @@
 from __future__ import absolute_import
 
+import os
 import threading
 
 from tornado import httpserver
 from tornado import ioloop
-from tornado.web import Application
+from tornado.web import Application, StaticFileHandler
 
 from .handlers import api, main
-
-
-class Site(Application):
-    """Tornado Website with multiple :class:`Application`'s."""
-
-    def __init__(self, applications, *args, **kwargs):
-        handlers = []
-        for urlprefix, application in applications:
-            for urlmatch, handler in application:
-                handlers.append((urlprefix + urlmatch, handler))
-        kwargs["handlers"] = handlers
-        super(Site, self).__init__(*args, **kwargs)
 
 
 class WebServerThread(threading.Thread):
@@ -30,10 +19,35 @@ class WebServerThread(threading.Thread):
         self.setDaemon(True)
 
     def run(self):
-        site = Site([
-            (r"/api", api.API),
-            (r"", main.MAIN),
-        ])
-        http_server = httpserver.HTTPServer(site)
+        
+        print os.path.join(os.path.dirname(__file__), "static")
+        
+        settings = {
+            'template_path': os.path.join(os.path.dirname(__file__), "templates")
+        }
+        
+        app = Application([
+            
+            # API Endpoints
+            (r"/api/?$", main.api_detail),
+            (r"/api/task/name/?$", api.list_task_types),
+            (r"/api/task/name/(.+?)/?", api.list_tasks_by_name),
+            (r"/api/task/?", api.list_tasks),
+            (r"/api/revoke/task/", api.RevokeTaskHandler),
+            (r"/api/task/(.+)/?", api.task_state),
+            (r"/api/worker/", api.list_workers),
+            (r"/api/worker/(.+?)/tasks/?", api.list_worker_tasks),
+            (r"/api/worker/(.+?)/?", api.show_worker),
+            
+            # Static Files
+            (r"/static/(.*)", StaticFileHandler, {"path": os.path.join(os.path.dirname(__file__), "static")}),
+            
+            # Web UI Endpoints
+            (r"/$", main.index),
+            
+        ], **settings)
+        
+        http_server = httpserver.HTTPServer(app)
         http_server.listen(self.port, address=self.address)
         ioloop.IOLoop.instance().start()
+

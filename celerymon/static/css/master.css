@@ -1,0 +1,319 @@
+body, div, header, ol, ul, li, p, h1, h2, h3, a, img {
+    	margin: 0; padding: 0; border: 0; vertical-align: baseline; list-style: none;
+}
+
+body {
+  background: #fafafa 50% 0 repeat;
+  font: 13px/24px "Open Sans", Arial, sans-serif;
+  color:  #444;
+}
+
+.container {
+  margin:  0 auto;
+  width:  800px;
+  box-shadow:  1px 0 rgba(0,0,0,0.1),  2px 0 rgba(0,0,0,0.05),  4px 0 rgba(0,0,0,0.04),
+              -1px 0 rgba(0,0,0,0.1), -2px 0 rgba(0,0,0,0.05), -4px 0 rgba(0,0,0,0.04); 
+  -webkit-box-shadow:  1px 0 rgba(0,0,0,0.1),  2px 0 rgba(0,0,0,0.05),  4px 0 rgba(0,0,0,0.04),
+                      -1px 0 rgba(0,0,0,0.1), -2px 0 rgba(0,0,0,0.05), -4px 0 rgba(0,0,0,0.04); 
+}
+
+#maincontent.container {
+  width: 760px;
+  padding: 30px 20px 30px 20px;
+  text-align: left;
+  background: #fff;
+  border-radius:  0 0 2px 2px;
+  box-shadow:  1px 0 rgba(0,0,0,0.1),  2px 0 rgba(0,0,0,0.05),  4px 0 rgba(0,0,0,0.04),
+              -1px 0 rgba(0,0,0,0.1), -2px 0 rgba(0,0,0,0.05), -4px 0 rgba(0,0,0,0.04),
+               0  1px 1px rgba(0,0,0,0.1), 0   2px 2px rgba(0,0,0,0.05), 0  4px 4px rgba(0,0,0,0.04);
+  -webkit-box-shadow:  1px 0 rgba(0,0,0,0.1),  2px 0 rgba(0,0,0,0.05),  4px 0 rgba(0,0,0,0.04),
+                      -1px 0 rgba(0,0,0,0.1), -2px 0 rgba(0,0,0,0.05), -4px 0 rgba(0,0,0,0.04),
+                       0  1px 1px rgba(0,0,0,0.1), 0 2px 2px rgba(0,0,0,0.05), 0  4px 4px rgba(0,0,0,0.04); 
+} 
+
+#maincontent.container h1{
+	padding-bottom: 8px;
+	font-size: 32px;
+	line-height: 32px;
+}
+
+#maincontent.container h2{
+	padding-bottom: 5px;
+	padding-top:10px;
+	font-weight: bold;
+	text-transform: none;
+}
+
+#maincontent.container h3{
+	padding-bottom: 5px;
+	padding-top:10px;
+}
+
+#maincontent.container p{
+	padding: 2px 0px 5px 0px;
+}
+
+a {
+  font:  inherit;
+  color:  #000;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+h1 {
+  font-size: 1.8em;
+}
+
+h2 {
+  font:  inherit;
+  font-size:  1.2em;
+  color:  #000;
+  text-transform: uppercase;
+}
+
+.contentbox {
+  text-align: left;
+  width:  220px;
+  margin: 10px 15px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.pagination{
+	width: 100%;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.pagination .step-links{
+	float: right;
+	font-size: 12px;
+}
+
+.clear{
+	clear: both;
+	height: 0px;
+	line-height: 0px;
+	width: 100%;
+}
+
+#share {
+	clear: both;
+	width: 100%;
+	padding-bottom: 10px;
+}
+
+#share .button{
+	float: left;
+	margin-top: 4px;
+}
+
+div.list {
+	margin-top: 10px;
+}
+
+div.list .element {
+	margin-bottom: 20px;
+	padding-bottom: 10px;
+}
+
+div.list h2{
+	font-weight: bold;
+}
+
+ul.small_list .title{
+	font-size: 12px;
+}
+
+ul.small_list .meta{
+	font-size: 10px;
+	display: block;
+	clear: both;
+}
+
+ul.small_list li {
+	margin-top: 8px;
+	padding-bottom: 5px;
+	border-bottom: 1px dotted #ccc;
+}
+
+/* Ze wonderful navigation bar */
+#nav {
+  background: #e6e6e6;
+  border-bottom:  1px solid #ccc;
+  text-align: right;
+  letter-spacing: -4px;
+}
+
+#nav .container {
+  background: #eee;
+}
+
+#nav li {
+  display:  inline-block;
+  letter-spacing: normal;
+}
+
+#nav li a {
+  color:  #666;
+  text-decoration: none;
+  text-transform: uppercase;
+  display: block;
+  padding:  10px;
+  background-color: rgba(255,255,255,0);
+  border-left:  1px solid #ccc;
+  transition: 0.25s;
+  -o-transition: 0.25s;
+  -webkit-transition: 0.25s;
+}
+
+#nav li#home {
+  float:  left;
+}
+
+#nav li#home a {
+  border-left:  0;
+  border-right:  1px solid #ccc;
+  padding:  0 10px 7px; 10px;
+}
+
+#nav li a:hover {
+  background-color: #fff;
+}
+
+/* Ze wonderful splash area */
+#splash {
+  background: #e8f0da;
+  border-bottom:  1px solid #ccc;
+  color: #454d41;
+}
+
+#splash .container {
+  background: transparent url(../img/splash.jpg) 0 0 no-repeat;
+  height:  275px;
+}
+
+#splash h1 {
+  padding:  40px 70px 10px 250px;
+}
+
+#splash p {
+  padding:  0 70px 5px 250px;
+}
+
+#splash a {
+  color:  #000;
+}
+
+/* Ze content area */
+#content {
+  /** text-align: center; **/
+  background: #fff;
+  padding: 25px 0;
+}
+
+#getStarted {
+  background: #f6faee;
+  border-radius: 1px;
+  box-shadow: 0 0 0 10px #f6faee;
+}
+
+/* Ze feeds area */
+#feeds.container {
+  text-align: center;
+  background: #fff;
+  border-radius:  0 0 2px 2px;
+  box-shadow:  1px 0 rgba(0,0,0,0.1),  2px 0 rgba(0,0,0,0.05),  4px 0 rgba(0,0,0,0.04),
+              -1px 0 rgba(0,0,0,0.1), -2px 0 rgba(0,0,0,0.05), -4px 0 rgba(0,0,0,0.04),
+               0  1px 1px rgba(0,0,0,0.1), 0   2px 2px rgba(0,0,0,0.05), 0  4px 4px rgba(0,0,0,0.04);
+  -webkit-box-shadow:  1px 0 rgba(0,0,0,0.1),  2px 0 rgba(0,0,0,0.05),  4px 0 rgba(0,0,0,0.04),
+                      -1px 0 rgba(0,0,0,0.1), -2px 0 rgba(0,0,0,0.05), -4px 0 rgba(0,0,0,0.04),
+                       0  1px 1px rgba(0,0,0,0.1), 0 2px 2px rgba(0,0,0,0.05), 0  4px 4px rgba(0,0,0,0.04); 
+}
+
+#feeds li {
+  margin-bottom:  1em;
+  line-height:  1.4em;
+}
+
+#feeds em {
+  display:  block;
+  font-style: inherit;
+}
+
+
+.lastnews li{
+	text-align: left;
+	padding: 0px 32px 0px 32px;
+}
+
+.lastnews h2{
+	font-size: 21px;
+	text-transform:  capitalize;
+}
+
+.bigbutton,.bigbutton:visited{
+
+	background: #222;
+	display: inline-block;
+	padding: 5px 10px 6px;
+	color: #fff;
+	text-decoration: none;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+	text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+	border-bottom: 1px solid rgba(0,0,0,0.25);
+	position: relative;
+	cursor: pointer
+
+
+	
+}
+
+/* Ze footer area */
+#footer {
+  color:  #888; 
+  box-shadow:  none;
+  -wekbit-box-shadow: none;
+  padding:  20px 0;
+}
+
+#footer #credits {
+  display: inline-block;
+  width:  390px;
+  margin:  0 0 0 10px;
+  vertical-align: top;
+  font-size: 11px;
+}
+
+#footer #donate {
+  display: inline-block;
+  width:  380px;
+  margin:  0 0 0 10px;
+  vertical-align: top;
+  cursor: pointer;
+}    
+
+#footer form{
+	margin: 0px;
+	padding: 0px;
+}
+
+#footer #creditcards{
+	float: left;
+	width: 140px;
+}
+
+#footer #creditcards h3{
+	padding-bottom: 5px;
+}
+
+#footer #we_welcome{
+	float: right;
+	width: 220px;
+}
