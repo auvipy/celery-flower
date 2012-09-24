@@ -20,12 +20,12 @@ packages, data_files = [], []
 root_dir = os.path.dirname(__file__)
 if root_dir != '':
     os.chdir(root_dir)
-src_dir = "celerymon"
+src_dir = 'celerymon'
 
 def osx_install_data(install_data):
 
     def finalize_options(self):
-        self.set_undefined_options("install", ("install_lib", "install_dir"))
+        self.set_undefined_options('install', ('install_lib', 'install_dir'))
         install_data.finalize_options(self)
 
 def fullsplit(path, result=None):
@@ -42,7 +42,7 @@ def fullsplit(path, result=None):
 for scheme in INSTALL_SCHEMES.values():
     scheme['data'] = scheme['purelib']
 
-SKIP_EXTENSIONS = [".pyc", ".pyo", ".swp", ".swo"]
+SKIP_EXTENSIONS = ['.pyc', '.pyo', '.swp', '.swo']
 
 
 def is_unwanted_file(filename):
@@ -54,10 +54,10 @@ def is_unwanted_file(filename):
 for dirpath, dirnames, filenames in os.walk(src_dir):
     # Ignore dirnames that start with '.'
     for i, dirname in enumerate(dirnames):
-        if dirname.startswith("."):
+        if dirname.startswith('.'):
             del dirnames[i]
     for filename in filenames:
-        if filename.endswith(".py"):
+        if filename.endswith('.py'):
             packages.append('.'.join(fullsplit(dirpath)))
         elif is_unwanted_file(filename):
             pass
@@ -65,40 +65,15 @@ for dirpath, dirnames, filenames in os.walk(src_dir):
             data_files.append([dirpath, [os.path.join(dirpath, f) for f in
                 filenames]])
 
-class RunTests(Command):
-    description = "Run the test suite from the testproj dir."
-
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        this_dir = os.getcwd()
-        testproj_dir = os.path.join(this_dir, "testproj")
-        os.chdir(testproj_dir)
-        sys.path.append(testproj_dir)
-        from django.core.management import execute_manager
-        os.environ["DJANGO_SETTINGS_MODULE"] = os.environ.get(
-                        "DJANGO_SETTINGS_MODULE", "settings")
-        settings_file = os.environ["DJANGO_SETTINGS_MODULE"]
-        settings_mod = __import__(settings_file, {}, {}, [''])
-        execute_manager(settings_mod, argv=[
-            __file__, "test"])
-        os.chdir(this_dir)
-
 install_requires = [
-    "celery>=2.3",
-    "tornado",
+    'celery>=2.3',
+    'tornado',
 ]
 
-if os.path.exists("README.rst"):
-    long_description = codecs.open("README.rst", "r", "utf-8").read()
+if os.path.exists('README.rst'):
+    long_description = codecs.open('README.rst', 'r', 'utf-8').read()
 else:
-    long_description = "See http://pypi.python.org/pypi/celerymon"
+    long_description = 'See http://pypi.python.org/pypi/celerymon'
 
 
 setup(
@@ -108,31 +83,30 @@ setup(
     author=distmeta.__author__,
     author_email=distmeta.__contact__,
     url=distmeta.__homepage__,
-    platforms=["any"],
-    license="BSD",
+    platforms=['any'],
+    license='BSD',
     packages=packages,
     data_files=data_files,
     zip_safe=False,
     install_requires=install_requires,
-    cmdclass = {"test": RunTests},
     classifiers=[
-        "Development Status :: 3 - Alpha",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 2.5",
-        "Programming Language :: Python :: 2.6",
-        "Programming Language :: Python :: 2.7",
-        "License :: OSI Approved :: BSD License",
-        "Operating System :: POSIX",
-        "Topic :: System :: Monitoring",
-        "Topic :: System :: Distributed Computing",
+        'Development Status :: 5 - Production/Stable',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.5',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: POSIX',
+        'Topic :: System :: Monitoring',
+        'Topic :: System :: Distributed Computing',
     ],
     entry_points={
-        "console_scripts": [
-            "celerymon = celerymon.bin.celerymon:main",
+        'console_scripts': [
+            'celerymon = celerymon.bin.celerymon:main',
         ],
-        "celery.commands": [
-            "mon = celerymon.bin.celerymon:MonitorDelegate",
+        'celery.commands': [
+            'mon = celerymon.bin.celerymon:MonitorDelegate',
         ],
     },
     long_description=long_description,
