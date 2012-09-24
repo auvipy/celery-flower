@@ -2,6 +2,11 @@
 Change history
 ==============
 
+1.0.1
+=====
+
+* Distribution did not include static files (Issue #17).
+
 1.0.0
 =====
 
