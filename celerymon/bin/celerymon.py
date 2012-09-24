@@ -33,7 +33,12 @@ import sys
 import traceback
 
 from celery.bin.base import Command, Option, daemon_options
-from celery.platforms import detached, set_process_title, strargv, create_pidlock
+from celery.platforms import (
+    detached,
+    set_process_title,
+    strargv,
+    create_pidlock,
+)
 from celery.utils import LOG_LEVELS
 
 from .. import __version__
@@ -78,6 +83,7 @@ class MonitorCommand(Command):
         set_process_title("celerymon", info=strargv(sys.argv))
 
         def _run_monitor():
+            create_pidlock(pidfile)
             app.log.setup_logging_subsystem(loglevel=loglevel,
                                             logfile=logfile)
             logger = app.log.get_default_logger(name="celery.mon")
@@ -95,8 +101,7 @@ class MonitorCommand(Command):
 
         if detach:
             with detached(logfile, pidfile, uid, gid, umask, workdir):
-                with create_pidlock(pidfile) as pidlock:
-                    _run_monitor()
+                _run_monitor()
         else:
             _run_monitor()
 
