@@ -30,7 +30,6 @@ from __future__ import with_statement
 
 import os
 import sys
-import traceback
 
 from celery.bin.base import Command, Option, daemon_options
 from celery.platforms import (
@@ -55,15 +54,15 @@ OPTION_LIST = (
 
 
 class MonitorCommand(Command):
-    namespace = "celerymon"
+    namespace = 'celerymon'
     enable_config_from_cmdline = True
-    preload_options = Command.preload_options + daemon_options("celerymon.pid")
+    preload_options = Command.preload_options + daemon_options('celerymon.pid')
     version = __version__
 
-    def run(self, loglevel="ERROR", logfile=None, http_port=8989,
+    def run(self, loglevel='ERROR', logfile=None, http_port=8989,
             http_address='', app=None, detach=False, pidfile=None,
             uid=None, gid=None, umask=None, working_directory=None, **kwargs):
-        print("celerymon %s is starting." % (self.version, ))
+        print('celerymon %s is starting.' % self.version)
         app = self.app
         workdir = working_directory
 
@@ -74,19 +73,19 @@ class MonitorCommand(Command):
         # Dump configuration to screen so we have some basic information
         # when users sends e-mails.
         print(STARTUP_INFO_FMT % {
-                "http_port": http_port,
-                "http_address": http_address or "localhost",
-                "conninfo": app.broker_connection().as_uri(),
+                'http_port': http_port,
+                'http_address': http_address or 'localhost',
+                'conninfo': app.broker_connection().as_uri(),
         })
 
-        print("celerymon has started.")
-        set_process_title("celerymon", info=strargv(sys.argv))
+        print('celerymon has started.')
+        set_process_title('celerymon', info=strargv(sys.argv))
 
         def _run_monitor():
             create_pidlock(pidfile)
             app.log.setup_logging_subsystem(loglevel=loglevel,
                                             logfile=logfile)
-            logger = app.log.get_default_logger(name="celery.mon")
+            logger = app.log.get_default_logger(name='celery.mon')
             monitor = MonitorService(logger=logger,
                                      http_port=http_port,
                                      http_address=http_address)
@@ -94,8 +93,8 @@ class MonitorCommand(Command):
             try:
                 monitor.start()
             except Exception, exc:
-                logger.error("celerymon raised exception %r\n%s" % (
-                                exc, traceback.format_exc()))
+                logger.error('celerymon raised exception %r',
+                             exc, exc_info=True)
             except KeyboardInterrupt:
                 pass
 
@@ -106,27 +105,25 @@ class MonitorCommand(Command):
             _run_monitor()
 
     def prepare_preload_options(self, options):
-        workdir = options.get("working_directory")
+        workdir = options.get('working_directory')
         if workdir:
             os.chdir(workdir)
 
     def get_options(self):
         conf = self.app.conf
-        return (Option('-l', '--loglevel',
-                    default=conf.CELERYMON_LOG_LEVEL,
-                    action="store", dest="loglevel",
-                    help="Choose between DEBUG/INFO/WARNING/ERROR/CRITICAL."),
-                Option('-P', '--port',
-                    action="store", type="int", dest="http_port", default=8989,
-                    help="Port the webserver should listen to."),
-                Option('-B', '--bind',
-                    action="store", type="string", dest="http_address",
-                    default="",
-                    help="Address webserver should listen to. Default (any)."),
-                Option('-D', '--detach',
-                    action="store_true", dest="detach",
-                    default=False,
-                    help="Run as daemon."))
+        return (
+            Option('-l', '--loglevel',
+                default=conf.CELERYMON_LOG_LEVEL,
+                help='Choose between DEBUG/INFO/WARNING/ERROR/CRITICAL.'),
+            Option('-P', '--port',
+                type='int', dest='http_port', default=8989,
+                help='Port the webserver should listen to.'),
+            Option('-B', '--bind',
+                dest='http_address', default='',
+                help='Address webserver should listen to. Default (any).'),
+            Option('-D', '--detach',
+                action='store_true', help='Run as daemon.')
+        )
 
 
 try:
@@ -145,5 +142,5 @@ def main():
     mon.execute_from_commandline()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

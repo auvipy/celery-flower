@@ -24,7 +24,7 @@ class APIHandler(RequestHandler):
 
     def __init__(self, *args, **kwargs):
         super(APIHandler, self).__init__(*args, **kwargs)
-        self.set_header("Content-Type", "application/javascript")
+        self.set_header('Content-Type', 'application/javascript')
 
 
 def api_handler(fun):
@@ -33,7 +33,7 @@ def api_handler(fun):
     def get(self, *args, **kwargs):
         return fun(self, *args, **kwargs)
 
-    return type(fun.__name__, (APIHandler, ), {"get": get})
+    return type(fun.__name__, (APIHandler, ), {'get': get})
 
 
 @api_handler
@@ -41,20 +41,20 @@ def task_state(request, task_id):
     try:
         task = state.tasks[task_id.strip('/')]
     except KeyError:
-        raise HTTPError(404, "Unknown task: %s" % task_id)
+        raise HTTPError(404, 'Unknown task: %s' % task_id)
     if task.state in states.EXCEPTION_STATES:
-        return task.info(extra=["traceback"])
+        return task.info(extra=['traceback'])
     return task.info()
 
 
 @api_handler
 def list_tasks(request):
-    limit = request.get_argument("limit", None)
+    limit = request.get_argument('limit', None)
     limit = limit and int(limit) or None
-    
-    since = request.get_argument("since", None)
+
+    since = request.get_argument('since', None)
     since = since and int(since) or None
-    
+
     if not since:
         return state.tasks_by_timestamp(limit=limit)
     else:
@@ -73,7 +73,7 @@ def list_tasks(request):
 
 @api_handler
 def list_tasks_by_name(request, name):
-    limit = request.get_argument("limit", None)
+    limit = request.get_argument('limit', None)
     limit = limit and int(limit) or None
     return state.tasks_by_type(name, limit=limit)
 
@@ -93,22 +93,21 @@ def show_worker(request, node_name):
     try:
         return state.workers[node_name]
     except KeyError:
-        raise HTTPError(404, "Unknown worker node: %s" % (node_name, ))
+        raise HTTPError(404, 'Unknown worker node: %s' % node_name)
 
 
 @api_handler
 def list_worker_tasks(request, hostname):
-    limit = request.get_argument("limit", None)
+    limit = request.get_argument('limit', None)
     limit = limit and int(limit) or None
     return state.tasks_by_worker(hostname, limit=limit)
 
 
 class RevokeTaskHandler(APIHandler):
-
-    SUPPORTED_METHODS = ["POST"]
+    SUPPORTED_METHODS = ['POST']
 
     @JSON
     def post(self):
-        task_id = self.get_argument("task_id")
+        task_id = self.get_argument('task_id')
         revoke(task_id)
-        return {"ok": True}
+        return {'ok': True}

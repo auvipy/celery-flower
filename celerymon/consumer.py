@@ -12,7 +12,7 @@ class EventConsumer(object):
         self.state = state
         self.connection = self.app.broker_connection()
         self.receiver = self.app.events.Receiver(self.connection,
-                                 handlers={"*": self.state.event})
+                                 handlers={'*': self.state.event})
 
     def start(self):
         self.receiver.capture()

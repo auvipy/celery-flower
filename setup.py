@@ -1,17 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import codecs
-import sys
 import os
-import platform
 
 try:
     from setuptools import setup, find_packages, Command
 except ImportError:
     from ez_setup import use_setuptools
     use_setuptools()
-    from setuptools import setup, find_packages, Command
-from distutils.command.install_data import install_data
+    from setuptools import setup, find_packages, Command  # noqa
 from distutils.command.install import INSTALL_SCHEMES
 
 import celerymon as distmeta
@@ -22,11 +19,6 @@ if root_dir != '':
     os.chdir(root_dir)
 src_dir = 'celerymon'
 
-def osx_install_data(install_data):
-
-    def finalize_options(self):
-        self.set_undefined_options('install', ('install_lib', 'install_dir'))
-        install_data.finalize_options(self)
 
 def fullsplit(path, result=None):
     if result is None:
@@ -65,11 +57,6 @@ for dirpath, dirnames, filenames in os.walk(src_dir):
             data_files.append([dirpath, [os.path.join(dirpath, f) for f in
                 filenames]])
 
-install_requires = [
-    'celery>=2.3',
-    'tornado',
-]
-
 if os.path.exists('README.rst'):
     long_description = codecs.open('README.rst', 'r', 'utf-8').read()
 else:
@@ -88,7 +75,10 @@ setup(
     packages=packages,
     data_files=data_files,
     zip_safe=False,
-    install_requires=install_requires,
+    install_requires=[
+        'celery>=2.3',
+        'tornado',
+    ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Operating System :: OS Independent',
