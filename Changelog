@@ -2,6 +2,14 @@
 Change history
 ==============
 
+1.0.2
+=====
+
+* :program:`celery mon` now the respects :option:`--pidfile` option
+  (Issue #14).
+
+    Fix contributed by Atsuo Ishimoto.
+
 1.0.1
 =====
 
