@@ -52,15 +52,17 @@ Configuration ->
 OPTION_LIST = (
 )
 
+PID_FILE = 'celerymon.pid'
+
 
 class MonitorCommand(Command):
     namespace = 'celerymon'
     enable_config_from_cmdline = True
-    preload_options = Command.preload_options + daemon_options('celerymon.pid')
+    preload_options = Command.preload_options + daemon_options(PID_FILE)
     version = __version__
 
     def run(self, loglevel='ERROR', logfile=None, http_port=8989,
-            http_address='', app=None, detach=False, pidfile=None,
+            http_address='', app=None, detach=False, pidfile=PID_FILE,
             uid=None, gid=None, umask=None, working_directory=None, **kwargs):
         print('celerymon %s is starting.' % self.version)
         app = self.app
