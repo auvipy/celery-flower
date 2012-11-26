@@ -126,15 +126,19 @@ class MonitorCommand(Command):
         )
 
 
+# celery 3.x extension command
 try:
-    # celery 3.x extension command
     from celery.bin.celery import Delegate
 
     class MonitorDelegate(Delegate):
         Command = MonitorCommand
 except ImportError:
-    class MonitorDelegate(object):  # noqa
-        pass
+    # celery 3.1
+    try:
+        MonitorDelegate = MonitorCommand
+    except ImportError:  # pre extension support
+        class MonitorDelegate(object):  # noqa
+            pass
 
 
 def main():
