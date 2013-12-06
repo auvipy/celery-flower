@@ -11,3 +11,7 @@ pip-log.txt
 .directory
 celeryconfig.py
 test.py
+
+# IDE
+*.iml
+.idea/
