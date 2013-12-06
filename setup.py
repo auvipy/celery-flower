@@ -76,7 +76,7 @@ setup(
     data_files=data_files,
     zip_safe=False,
     install_requires=[
-        'celery>=2.3',
+        'celery>=3.1.1',
         'tornado',
     ],
     classifiers=[
