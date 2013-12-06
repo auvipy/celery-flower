@@ -7,7 +7,8 @@ from tornado.web import RequestHandler, HTTPError
 
 from celery import states
 from celery.task.control import revoke
-from celery.events.state import state
+from celery.events.state import State
+state = State()
 
 
 def JSON(fun):

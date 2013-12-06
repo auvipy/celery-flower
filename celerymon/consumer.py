@@ -1,7 +1,8 @@
 from __future__ import absolute_import
 
 from celery import current_app
-from celery.events.state import state
+from celery.events.state import State
+state = State()
 
 
 class EventConsumer(object):
