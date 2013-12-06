@@ -8,8 +8,8 @@ from tornado.web import RequestHandler, HTTPError
 
 from celery import states
 from celery.task.control import revoke
-from celery.events.state import State
-state = State()
+
+from celerymon.state import state
 
 
 def JSON(fun):
