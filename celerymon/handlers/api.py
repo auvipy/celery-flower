@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 from functools import wraps
+import itertools
 import types
 
 import anyjson
@@ -17,8 +18,8 @@ def JSON(fun):
     @wraps(fun)
     def _write_json(self, *args, **kwargs):
         content = fun(self, *args, **kwargs)
-        if isinstance(content, types.GeneratorType):
-            content = list(content)
+        if isinstance(content, types.GeneratorType, itertools.islice):
+            content = [c for c in content]
         self.write(anyjson.serialize(content))
 
     return _write_json
