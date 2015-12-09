@@ -2,6 +2,14 @@
  celerymon - Real-time monitoring of Celery workers
 ====================================================
 
+DISCONTINUED
+============
+
+The more recent Flower project supports the same features as celerymon, and so much more,
+so there shouldn't be any reason to use celerymon in new projects.
+
+Please see Flower: https://github.com/mher/flower
+
 :Version: 1.0.3
 
 Installation
