@@ -56,7 +56,6 @@ OPTION_LIST = (
 class MonitorCommand(Command):
     namespace = 'celerymon'
     enable_config_from_cmdline = True
-    preload_options = Command.preload_options + daemon_options('celerymon.pid')
     version = __version__
 
     def run(self, loglevel='ERROR', logfile=None, http_port=8989,
@@ -112,17 +111,19 @@ class MonitorCommand(Command):
     def get_options(self):
         conf = self.app.conf
         return (
-            Option('-l', '--loglevel',
-                default=conf.CELERYMON_LOG_LEVEL,
-                help='Choose between DEBUG/INFO/WARNING/ERROR/CRITICAL.'),
-            Option('-P', '--port',
-                type='int', dest='http_port', default=8989,
-                help='Port the webserver should listen to.'),
-            Option('-B', '--bind',
-                dest='http_address', default='',
-                help='Address webserver should listen to. Default (any).'),
-            Option('-D', '--detach',
-                action='store_true', help='Run as daemon.')
+            (
+                Option('-l', '--loglevel',
+                    default=conf.CELERYMON_LOG_LEVEL,
+                    help='Choose between DEBUG/INFO/WARNING/ERROR/CRITICAL.'),
+                Option('-P', '--port',
+                    type='int', dest='http_port', default=8989,
+                    help='Port the webserver should listen to.'),
+                Option('-B', '--bind',
+                    dest='http_address', default='',
+                    help='Address webserver should listen to. Default (any).'),
+                Option('-D', '--detach',
+                    action='store_true', help='Run as daemon.')
+             ) + daemon_options('celerymon.pid')
         )
 
 
