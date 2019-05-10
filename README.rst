@@ -2,13 +2,10 @@
  celerymon - Real-time monitoring of Celery workers
 ====================================================
 
-DISCONTINUED
-============
+The future ceery 5 compatibale django & ASGI based realtime monitoring.
+=======================================================================
 
-The more recent Flower project supports the same features as celerymon, and so much more,
-so there shouldn't be any reason to use celerymon in new projects.
-
-Please see Flower: https://github.com/mher/flower
+This will be only ready after he release of celery 5
 
 :Version: 1.0.3
 
@@ -20,11 +17,8 @@ or from source.
 
 To install using ``pip``,::
 
-    $ pip install celerymon
+    $ pip3 install celerymon
 
-To install using ``easy_install``,::
-
-    $ easy_install celerymon
 
 Downloading and installing from source
 --------------------------------------
