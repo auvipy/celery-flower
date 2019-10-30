@@ -2,12 +2,12 @@
  celerymon - Real-time monitoring of Celery workers
 ====================================================
 
-The future ceery 5 compatibale django & ASGI based realtime monitoring.
+Celery 4+ monitoring app based on asgi & python 3.6+
 =======================================================================
 
-This will be only ready after he release of celery 5
 
-:Version: 1.0.3
+
+:Version: 0.0.1
 
 Installation
 =============

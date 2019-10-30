@@ -1,10 +1,8 @@
-from __future__ import absolute_import
-
 from celery import current_app
 from celerymon.state import state
 
 
-class EventConsumer(object):
+class EventConsumer:
     """Capture events sent by messages and store them in memory."""
 
     def __init__(self, state=state):
