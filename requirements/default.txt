@@ -1,2 +1,2 @@
-celery>=4.4.0rc3
-bareasgi
+celery>=5.6.2
+starlette==1.6.0
