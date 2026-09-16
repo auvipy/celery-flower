@@ -1,105 +1,105 @@
 from starlette.routing import Route
 
-
-async def not_implemented(request):
-    return {"status": "not implemented"}
+from . import api, views
 
 
 routes = [
-    # Web
-    Route("/", not_implemented, name="home"),
-    Route("/workers", not_implemented, name="workers"),
-    Route("/worker/{hostname}", not_implemented, name="worker"),
-    Route("/task/{task_id}", not_implemented, name="task"),
-    Route("/tasks", not_implemented, name="tasks"),
-    Route("/tasks/datatable", not_implemented, name="tasks-datatable"),
-    Route("/broker", not_implemented, name="broker"),
+    # App
+    Route("/", views.workers, name="main"),
+    Route("/workers", views.workers, name="workers"),
+    Route("/worker/{hostname}", views.worker, name="worker"),
+    Route("/task/{task_id}", views.task, name="task"),
+    Route("/tasks", views.tasks, name="tasks"),
+    Route("/tasks/datatable", views.tasks_datatable, name="tasks-datatable"),
+    Route("/broker", views.broker, name="broker"),
 
-    # Workers
-    Route("/api/workers", not_implemented, name="list-workers"),
+    # Worker API
+    Route("/api/workers", api.list_workers, name="list-workers"),
     Route(
         "/api/worker/shutdown/{hostname}",
-        not_implemented,
+        api.shutdown_worker,
         name="shutdown-worker",
     ),
     Route(
         "/api/worker/pool/restart/{hostname}",
-        not_implemented,
+        api.restart_worker_pool,
         name="restart-worker-pool",
     ),
     Route(
         "/api/worker/pool/grow/{hostname}",
-        not_implemented,
+        api.grow_worker_pool,
         name="grow-worker-pool",
     ),
     Route(
         "/api/worker/pool/shrink/{hostname}",
-        not_implemented,
+        api.shrink_worker_pool,
         name="shrink-worker-pool",
     ),
     Route(
         "/api/worker/pool/autoscale/{hostname}",
-        not_implemented,
+        api.autoscale_worker,
         name="autoscale-worker",
     ),
     Route(
         "/api/worker/queue/add-consumer/{hostname}",
-        not_implemented,
+        api.add_consumer,
         name="add-consumer",
     ),
     Route(
         "/api/worker/queue/cancel-consumer/{hostname}",
-        not_implemented,
+        api.cancel_consumer,
         name="cancel-consumer",
     ),
 
-    # Tasks
-    Route("/api/tasks", not_implemented, name="list-tasks"),
-    Route("/api/task/types", not_implemented, name="list-task-types"),
-    Route("/api/queues/length", not_implemented, name="queue-lengths"),
-    Route("/api/task/info/{task_id}", not_implemented, name="task-info"),
-    Route("/api/task/apply/{task_id}", not_implemented, name="apply-task"),
+    # Task API
+    Route("/api/tasks", api.list_tasks, name="list-tasks"),
+    Route("/api/task/types", api.list_task_types, name="list-task-types"),
+    Route("/api/queues/length", api.queue_lengths, name="queue-lengths"),
+    Route("/api/task/info/{task_id}", api.task_info, name="task-info"),
+    Route("/api/task/apply/{task_id}", api.apply_task, name="apply-task"),
     Route(
         "/api/task/async-apply/{task_id}",
-        not_implemented,
+        api.async_apply_task,
         name="async-apply-task",
     ),
     Route(
         "/api/task/send-task/{task_id}",
-        not_implemented,
+        api.send_task,
         name="send-task",
     ),
     Route(
         "/api/task/result/{task_id}",
-        not_implemented,
+        api.task_result,
         name="task-result",
     ),
     Route(
         "/api/task/abort/{task_id}",
-        not_implemented,
+        api.abort_task,
         name="abort-task",
     ),
     Route(
         "/api/task/timeout/{task_id}",
-        not_implemented,
+        api.timeout_task,
         name="timeout-task",
     ),
     Route(
         "/api/task/rate-limit/{task_id}",
-        not_implemented,
+        api.rate_limit_task,
         name="rate-limit-task",
     ),
     Route(
         "/api/task/revoke/{task_id}",
-        not_implemented,
+        api.revoke_task,
         name="revoke-task",
     ),
 
-    # System
-    Route("/metrics", not_implemented, name="metrics"),
-    Route("/healthcheck", not_implemented, name="healthcheck"),
-    Route("/login", not_implemented, name="login"),
+    # Metrics / system
+    Route("/metrics", api.metrics, name="metrics"),
+    Route("/healthcheck", api.healthcheck, name="healthcheck"),
 
-    # Catch-all
-    Route("/{path:path}", not_implemented, name="not-found"),
+    # Auth
+    Route("/login", views.login, name="login"),
+
+    # Error handler
+    Route("/{path:path}", views.not_found, name="not-found"),
 ]
