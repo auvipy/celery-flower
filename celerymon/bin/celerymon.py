@@ -59,8 +59,13 @@ class MonitorCommand(Command):
     version = __version__
 
     def run(self, loglevel='ERROR', logfile=None, http_port=8989,
-            http_address='', app=None, detach=False, pidfile=PID_FILE,
-            uid=None, gid=None, umask=None, working_directory=None, **kwargs):
+            http_address='', basic_auth=None, app=None, detach=False,
+            pidfile=PID_FILE, uid=None, gid=None, umask=None,
+            working_directory=None, **kwargs):
+        basic_auth = basic_auth or os.environ.get('CELERYMON_BASIC_AUTH')
+        if not basic_auth:
+            print('WARNING: celerymon is starting without authentication. '
+                  'Set --basic-auth or CELERYMON_BASIC_AUTH to protect it.')
         print('celerymon %s is starting.' % self.version)
         app = self.app
         workdir = working_directory
